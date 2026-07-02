@@ -64,7 +64,14 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
                   Founder
                 </p>
                 <p className="text-base font-semibold mt-1 text-foreground">Ritesh Bisen</p>
-                <p className="text-xs text-muted">Fullstack & Architecture</p>
+                <p className="text-xs text-muted">Chief Technology Officer</p>
+              </div>
+              <div className="pt-3 border-t border-border/40">
+                <p className="text-xs text-muted font-semibold uppercase tracking-wider">
+                  Co-Founder
+                </p>
+                <p className="text-base font-semibold mt-1 text-foreground">Vatsalya Verma</p>
+                <p className="text-xs text-muted">Chief Operating Officer</p>
               </div>
               <div className="pt-3 border-t border-border/40">
                 <p className="text-xs text-muted font-semibold uppercase tracking-wider">
