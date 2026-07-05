@@ -17,6 +17,10 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://verity-iq.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
   title: "Verity IQ",
   description:
     "Upload any PDF, TXT, or DOCX document and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
@@ -61,6 +65,25 @@ export default function RootLayout({
 
               gtag('config', 'G-W809Q34KRP');
             `,
+          }}
+        />
+        {/* JSON-LD Structured Data Schema for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "Verity IQ",
+              "operatingSystem": "All",
+              "applicationCategory": "EducationalApplication",
+              "description": "Upload any PDF, TXT, or DOCX document and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
+              "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+              }
+            })
           }}
         />
       </head>
