@@ -50,6 +50,19 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-W809Q34KRP" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-W809Q34KRP');
+            `,
+          }}
+        />
       </head>
       <body
         className={`${outfit.variable} ${dmMono.variable} font-sans antialiased bg-background text-foreground transition-colors duration-200`}
