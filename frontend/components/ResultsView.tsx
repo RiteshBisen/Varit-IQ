@@ -91,7 +91,7 @@ export default function ResultsView({
 
   const handleDownloadReport = () => {
     let reportContent = `=========================================\n`;
-    reportContent += `       VERITY IQ PERFORMANCE REPORT      \n`;
+    reportContent += `       VARIT IQ PERFORMANCE REPORT      \n`;
     reportContent += `=========================================\n\n`;
     reportContent += `Document Source : ${documentName}\n`;
     reportContent += `Assessment Type : ${assessmentType.toUpperCase()}\n`;
@@ -138,7 +138,7 @@ export default function ResultsView({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `verity_iq_report_${documentName.replace(/[^a-zA-Z0-9.-]/g, "_")}.txt`;
+    link.download = `varit_iq_report_${documentName.replace(/[^a-zA-Z0-9.-]/g, "_")}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -165,7 +165,7 @@ export default function ResultsView({
 
     const opt = {
       margin: [10, 10, 10, 10],
-      filename: `verity_iq_report_${documentName.replace(/[^a-zA-Z0-9.-]/g, "_")}.pdf`,
+      filename: `varit_iq_report_${documentName.replace(/[^a-zA-Z0-9.-]/g, "_")}.pdf`,
       image: { type: "jpeg", quality: 0.95 },
       html2canvas: { scale: 2, useCORS: true, logging: false },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
@@ -205,7 +205,7 @@ export default function ResultsView({
             Performance Analytics
           </h1>
           <p className="text-xs font-mono-custom text-muted mt-2 uppercase font-black">
-            Platform Analysis Report · Verity IQ
+            Platform Analysis Report · Varit IQ
           </p>
         </div>
         <div className="text-xs font-mono-custom font-bold uppercase text-muted tracking-wider mt-2 sm:mt-0 bg-accent-light px-4 py-2 rounded-full border border-border shadow-xs">

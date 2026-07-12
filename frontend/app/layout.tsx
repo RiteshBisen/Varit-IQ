@@ -17,16 +17,16 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://verity-iq.vercel.app"),
+  metadataBase: new URL("https://varit-iq.vercel.app"),
   alternates: {
     canonical: "/",
   },
-  title: "Verity IQ",
+  title: "Varit IQ",
   description:
     "Upload any PDF, TXT, or DOCX document and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
   keywords: ["quiz", "MCQ", "AI", "Gemini", "study", "education", "flashcards"],
   openGraph: {
-    title: "Verity IQ",
+    title: "Varit IQ",
     description: "Turn any document into an instant quiz with Google Gemini.",
     type: "website",
   },
@@ -74,7 +74,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "Verity IQ",
+              "name": "Varit IQ",
               "operatingSystem": "All",
               "applicationCategory": "EducationalApplication",
               "description": "Upload any PDF, TXT, or DOCX document and get AI-generated multiple choice questions instantly, powered by Google Gemini.",

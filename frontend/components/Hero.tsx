@@ -37,7 +37,7 @@ export default function Hero({ onScrollToGenerator }: HeroProps) {
 
         {/* Short Description */}
         <p className="text-base md:text-lg text-muted leading-relaxed max-w-lg">
-          VerityIQ instantly transforms textbooks, notes, and worksheets into custom assessments. 
+          VaritIQ instantly transforms textbooks, notes, and worksheets into custom assessments. 
           Powered by Gemini, our platform generates, conducts, and grades multi-format quizzes with rich, educational analytics.
         </p>
 

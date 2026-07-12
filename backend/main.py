@@ -699,7 +699,7 @@ def _get_email_templates(name: str, user_email: str, category: str, subject: Opt
         </div>
         <hr style="border: 0; border-top: 1px solid #dadce0; margin: 25px 0 15px 0;" />
         <p style="font-size: 11px; color: #5f6368; text-align: center; margin: 0;">
-          Sent automatically by Verity IQ Support Portal
+          Sent automatically by Varit IQ Support Portal
         </p>
       </body>
     </html>
@@ -766,13 +766,13 @@ def _send_resend_email_blocking(
     headers = {
         "Authorization": f"Bearer {resend_api_key}",
         "Content-Type": "application/json",
-        "User-Agent": "VerityIQ-Backend/1.0"
+        "User-Agent": "VaritIQ-Backend/1.0"
     }
 
     # Resend requires a verified domain or uses onboarding@resend.dev in sandbox mode.
     # We allow defining a custom sender in the environment (e.g. RESEND_FROM_EMAIL).
-    # If not set, we default to "Verity IQ Support <onboarding@resend.dev>"
-    from_email = os.getenv("RESEND_FROM_EMAIL", "") or "Verity IQ Support <onboarding@resend.dev>"
+    # If not set, we default to "Varit IQ Support <onboarding@resend.dev>"
+    from_email = os.getenv("RESEND_FROM_EMAIL", "") or "Varit IQ Support <onboarding@resend.dev>"
 
     payload = {
         "from": from_email,
@@ -815,7 +815,7 @@ async def send_contact_message(request: ContactRequest):
     smtp_port_str = os.getenv("SMTP_PORT", "587")
     smtp_user = os.getenv("SMTP_USER", "")
     smtp_password = os.getenv("SMTP_PASSWORD", "")
-    support_email = os.getenv("SUPPORT_EMAIL", "") or smtp_user or "support@verityiq.edu"
+    support_email = os.getenv("SUPPORT_EMAIL", "") or smtp_user or "support@varitiq.edu"
 
     # Pre-generate templates
     text_content, html_content = _get_email_templates(

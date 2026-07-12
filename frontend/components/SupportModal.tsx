@@ -82,7 +82,7 @@ export default function SupportModal({ onClose }: SupportModalProps) {
           key: orderData.key_id,
           amount: orderData.amount,
           currency: orderData.currency,
-          name: "Verity IQ",
+          name: "Varit IQ",
           description: amount === 20 ? "Buy 1 Chai ☕" : amount === 60 ? "Buy 3 Chais ☕☕☕" : amount === 100 ? "Buy 5 Chais ☕☕☕☕☕" : `Buy Custom Chai ✨`,
           order_id: orderData.order_id,
           handler: async function (response: any) {
@@ -96,7 +96,7 @@ export default function SupportModal({ onClose }: SupportModalProps) {
               setCompletedAmount(amount);
               setPaymentState("success");
               toast.success("Payment Successful", {
-                description: "Thank you for supporting Verity IQ!",
+                description: "Thank you for supporting Varit IQ!",
               });
             } catch (err: any) {
               setErrorMsg(err.message || "Payment verification failed.");
@@ -112,7 +112,7 @@ export default function SupportModal({ onClose }: SupportModalProps) {
             },
           },
           prefill: {
-            name: "Verity IQ Supporter",
+            name: "Varit IQ Supporter",
           },
           theme: {
             color: "#4285F4", // Google Blue
@@ -225,7 +225,7 @@ export default function SupportModal({ onClose }: SupportModalProps) {
                   <Coffee className="w-6 h-6 stroke-[2]" />
                 </div>
                 <h2 className="text-2xl font-bold text-foreground tracking-tight">
-                  Support Verity IQ
+                  Support Varit IQ
                 </h2>
                 <p className="text-xs text-muted mt-2 max-w-sm mx-auto leading-relaxed">
                   We build features out of pure passion. Your contribution helps us cover Gemini API usage and keep the platform free for developers and learners.
@@ -351,7 +351,7 @@ export default function SupportModal({ onClose }: SupportModalProps) {
 
               <div>
                 <h3 className="text-lg font-bold text-foreground">
-                  Verity IQ Sandbox Checkout
+                  Varit IQ Sandbox Checkout
                 </h3>
                 <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-brutal-yellow/10 border border-brutal-yellow/20 rounded-full text-[10px] text-yellow-600 dark:text-yellow-400 font-bold uppercase tracking-wider">
                   <span className="w-1.5 h-1.5 bg-brutal-yellow rounded-full animate-ping" />
@@ -452,7 +452,7 @@ export default function SupportModal({ onClose }: SupportModalProps) {
                 </div>
 
                 <p className="text-xs text-muted max-w-sm mx-auto leading-relaxed">
-                  Your generous cup of coffee helps keep our servers awake, pays our API tokens, and guarantees we can keep adding custom features to Verity IQ. We truly appreciate you!
+                  Your generous cup of coffee helps keep our servers awake, pays our API tokens, and guarantees we can keep adding custom features to Varit IQ. We truly appreciate you!
                 </p>
 
                 <button

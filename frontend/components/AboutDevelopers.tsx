@@ -16,7 +16,7 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
             About Developers
           </h1>
           <p className="text-xs text-muted mt-2 tracking-wide font-medium">
-            Verity IQ · Education & Technology Synergy
+            Varit IQ · Education & Technology Synergy
           </p>
         </div>
         <button
@@ -42,7 +42,7 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
             </h3>
           </div>
           <p className="text-sm text-foreground/80 leading-relaxed font-normal">
-            Verity IQ transforms passive documents into interactive learning tools. Following modern Material Design guidelines—where clarity, accessibility, and intuitive information hierarchy are paramount—we showcase code architecture and logic reviews clearly. Stripping away unnecessary complexity provides a highly accessible, focused environment for conceptual mastery. Powered by Gemini, learners receive instant assessments, correct/incorrect reviews, and deep subjective critiques tailored exactly to their study materials.
+            Varit IQ transforms passive documents into interactive learning tools. Following modern Material Design guidelines—where clarity, accessibility, and intuitive information hierarchy are paramount—we showcase code architecture and logic reviews clearly. Stripping away unnecessary complexity provides a highly accessible, focused environment for conceptual mastery. Powered by Gemini, learners receive instant assessments, correct/incorrect reviews, and deep subjective critiques tailored exactly to their study materials.
           </p>
         </div>
 
@@ -131,10 +131,10 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
         </div>
         <div>
           <h4 className="font-semibold text-lg text-foreground">
-            The Design Philosophy of Verity IQ
+            The Design Philosophy of Varit IQ
           </h4>
           <p className="text-sm text-foreground/80 mt-1.5 leading-relaxed font-normal">
-            "Form follows function with modern clarity." Verity IQ embraces a clean, accessible Workspace design system to present academic material with absolute clarity, prioritizing readability, structural consistency, and visual ease. By removing heavy outlines and blocky shadows, we focus pure visual energy on your path to conceptual mastery.
+            "Form follows function with modern clarity." Varit IQ embraces a clean, accessible Workspace design system to present academic material with absolute clarity, prioritizing readability, structural consistency, and visual ease. By removing heavy outlines and blocky shadows, we focus pure visual energy on your path to conceptual mastery.
           </p>
         </div>
       </div>

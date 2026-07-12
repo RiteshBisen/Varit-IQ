@@ -1,10 +1,10 @@
-# 🧠 Verity IQ — Autonomous MCQ Generator
+# 🧠 Varit IQ — Autonomous MCQ Generator
 
 > Upload any document. Get a quiz in seconds. Powered by **Google Gemini 2.0 Flash**.
 > 
-> 🌐 **Live Demo:** [verity-iq.vercel.app](https://verity-iq.vercel.app/)
+> 🌐 **Live Demo:** [varit-iq.vercel.app](https://varit-iq.vercel.app/)
 
-![Verity IQ](https://img.shields.io/badge/AI-Google%20Gemini-4285F4?style=flat-square&logo=google)
+![Varit IQ](https://img.shields.io/badge/AI-Google%20Gemini-4285F4?style=flat-square&logo=google)
 ![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)
 ![Next.js](https://img.shields.io/badge/Frontend-Next.js%2015-000000?style=flat-square&logo=nextdotjs)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript)

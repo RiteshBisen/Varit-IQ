@@ -269,7 +269,7 @@ export default function HomePage() {
             </h1>
             
             <p className="text-sm md:text-base text-muted leading-relaxed max-w-xl mx-auto font-medium">
-              Verity IQ reads your files (PDF, DOCX, TXT) and formulates academic multiple-choice quizzes, true/false modules, or detailed subjective Q&A critiques — autonomously powered by Gemini.
+              Varit IQ reads your files (PDF, DOCX, TXT) and formulates academic multiple-choice quizzes, true/false modules, or detailed subjective Q&A critiques — autonomously powered by Gemini.
             </p>
           </div>
         </div>
@@ -429,7 +429,7 @@ export default function HomePage() {
                       </div>
                       <div className="text-left">
                         <p className="text-xs sm:text-sm font-medium text-foreground">
-                          Enjoying Verity IQ? Help us keep it free and caffeinated by buying us a cup of chai!
+                          Enjoying Varit IQ? Help us keep it free and caffeinated by buying us a cup of chai!
                         </p>
                       </div>
                     </div>
@@ -516,7 +516,7 @@ export default function HomePage() {
       {/* Footer Banner */}
       <footer className="relative z-10 py-6 text-center border-t border-border bg-card">
         <p className="text-xs text-muted font-medium">
-          Verity IQ · Education Framework · Powered by Google Gemini AI
+          Varit IQ · Education Framework · Powered by Google Gemini AI
         </p>
       </footer>
 

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://verity-iq.vercel.app/sitemap.xml',
+    sitemap: 'https://varit-iq.vercel.app/sitemap.xml',
   };
 }

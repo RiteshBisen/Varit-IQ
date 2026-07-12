@@ -30,7 +30,7 @@ export default function Navbar({
           </div>
           <div className="text-left">
             <span className="font-display font-semibold text-xl sm:text-2xl tracking-tight block leading-none text-foreground">
-              Verity IQ
+              Varit IQ
             </span>
             <span className="text-[10px] tracking-wide text-muted hidden sm:block font-medium mt-1">
               Truth & Intelligence Synergy

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: verity-iq-backend
+    name: varit-iq-backend
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
@@ -9,7 +9,7 @@ services:
       - key: GOOGLE_API_KEY
         sync: false # You will enter your Gemini API key in the Render dashboard
       - key: FRONTEND_URL
-        value: https://verity-iq.vercel.app
+        value: https://varit-iq.vercel.app
       - key: SMTP_HOST
         value: smtp.gmail.com
       - key: SMTP_PORT
