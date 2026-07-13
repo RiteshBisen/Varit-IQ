@@ -2,7 +2,7 @@
 
 > Upload any document. Get a quiz in seconds. Powered by **Google Gemini 2.0 Flash**.
 > 
-> 🌐 **Live Demo:** [varit-iq.vercel.app](https://varit-iq.vercel.app/)
+> 🌐 **Live Demo:** [varitiq.in](https://www.varitiq.in/)
 
 ![Varit IQ](https://img.shields.io/badge/AI-Google%20Gemini-4285F4?style=flat-square&logo=google)
 ![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)

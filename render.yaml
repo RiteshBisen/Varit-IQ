@@ -9,7 +9,7 @@ services:
       - key: GOOGLE_API_KEY
         sync: false # You will enter your Gemini API key in the Render dashboard
       - key: FRONTEND_URL
-        value: https://varit-iq.vercel.app
+        value: https://www.varitiq.in
       - key: SMTP_HOST
         value: smtp.gmail.com
       - key: SMTP_PORT
