@@ -44,6 +44,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "https://varitiq.in",
+        "https://www.varitiq.in",
         os.getenv("FRONTEND_URL", "http://localhost:3000")
     ],
     allow_origin_regex=r"https://.*\.(serveousercontent\.com|lhr\.life|loca\.lt)",
