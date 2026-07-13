@@ -815,7 +815,7 @@ async def send_contact_message(request: ContactRequest):
     smtp_port_str = os.getenv("SMTP_PORT", "587")
     smtp_user = os.getenv("SMTP_USER", "")
     smtp_password = os.getenv("SMTP_PASSWORD", "")
-    support_email = os.getenv("SUPPORT_EMAIL", "") or smtp_user or "support@varitiq.edu"
+    support_email = os.getenv("SUPPORT_EMAIL", "") or smtp_user or "supportvaritiq@gmail.com"
 
     # Pre-generate templates
     text_content, html_content = _get_email_templates(
