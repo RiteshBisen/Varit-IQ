@@ -170,6 +170,9 @@ ALLOWED_MIME_TYPES = {
     "text/plain": "txt",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
     "application/msword": "doc",
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
 }
 
 def extract_text_from_docx(file_bytes: bytes) -> str:
@@ -354,8 +357,8 @@ async def generate_mcqs(
                 prompt_instruction,
             ]
         else:
-            # ── PDF Inline Bytes ─────────────────────────────────────────────
-            print(f"[INFO] Passing '{file.filename}' ({len(file_bytes)} bytes) as inline PDF bytes...")
+            # ── PDF/Image Inline Bytes ─────────────────────────────────────────────
+            print(f"[INFO] Passing '{file.filename}' ({len(file_bytes)} bytes) as inline bytes...")
             contents = [
                 types.Part.from_bytes(
                     data=file_bytes,

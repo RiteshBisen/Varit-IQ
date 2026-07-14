@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   title: "Varit IQ",
   description:
-    "Upload any PDF, TXT, or DOCX document and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
+    "Upload any PDF, TXT, DOCX document, or Image (PNG/JPG) and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
   keywords: ["quiz", "MCQ", "AI", "Gemini", "study", "education", "flashcards"],
   openGraph: {
     title: "Varit IQ",
@@ -83,7 +83,7 @@ export default function RootLayout({
               "name": "Varit IQ",
               "operatingSystem": "All",
               "applicationCategory": "EducationalApplication",
-              "description": "Upload any PDF, TXT, or DOCX document and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
+              "description": "Upload any PDF, TXT, DOCX document, or Image (PNG/JPG) and get AI-generated multiple choice questions instantly, powered by Google Gemini.",
               "offers": {
                 "@type": "Offer",
                 "price": "0.00",

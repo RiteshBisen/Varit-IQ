@@ -15,6 +15,9 @@ const ACCEPTED_TYPES = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
     ".docx",
   ],
+  "image/png": [".png"],
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/webp": [".webp"],
 };
 
 const MAX_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
@@ -34,7 +37,7 @@ export default function FileDropzone({
         if (firstError.code === "file-too-large") {
           setError("File exceeds 20MB limit. Please upload a smaller document.");
         } else if (firstError.code === "file-invalid-type") {
-          setError("Invalid file type. Please upload a PDF, DOCX, or TXT file.");
+          setError("Invalid file type. Please upload a PDF, DOCX, TXT, or Image file.");
         } else {
           setError(firstError.message);
         }
@@ -123,7 +126,7 @@ export default function FileDropzone({
 
           {/* Supported formats */}
           <div className="flex gap-3 mt-8 flex-wrap justify-center max-w-sm">
-            {["PDF", "TXT", "DOCX"].map((fmt) => (
+            {["PDF", "TXT", "DOCX", "PNG/JPG/WEBP"].map((fmt) => (
               <span
                 key={fmt}
                 className="inline-flex items-center gap-2 px-4 py-2 border border-border bg-card text-xs text-foreground font-mono-custom font-bold rounded-full shadow-sm hover:bg-accent-light transition-all"
