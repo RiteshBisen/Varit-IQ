@@ -44,6 +44,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://127.0.0.1:3000",
         "https://varitiq.in",
         "https://www.varitiq.in",
         os.getenv("FRONTEND_URL", "http://localhost:3000")
@@ -65,7 +66,7 @@ if not GOOGLE_API_KEY:
 else:
     client = genai.Client(api_key=GOOGLE_API_KEY)
 
-MODEL_ID = "gemini-2.5-flash"
+MODEL_ID = os.getenv("GEMINI_MODEL_ID", "gemini-flash-latest")
 
 def get_system_instruction(difficulty: str, question_count: int, assessment_type: str) -> str:
     link_prohibition = (
@@ -237,6 +238,11 @@ async def health():
 
 @app.post("/api/tutor", response_model=TutorResponse, tags=["Quiz"])
 async def chat_with_tutor(request: TutorRequest):
+    if not client:
+        raise HTTPException(
+            status_code=500,
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY is configured in your environment variables."
+        )
     try:
         system_instruction = (
             "You are an expert, encouraging academic tutor. A student got a multiple-choice question wrong. "
@@ -292,6 +298,11 @@ async def generate_mcqs(
     """
     Accept a PDF, TXT, or DOCX document upload and return AI-generated questions matching the assessment format.
     """
+    if not client:
+        raise HTTPException(
+            status_code=500,
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY is configured in your environment variables."
+        )
 
     # ── Validate MIME type ──────────────────────────────────────────────────
     content_type = file.content_type or ""
@@ -428,6 +439,11 @@ async def evaluate_subjective_answers(request: SubjectiveEvaluationRequest):
     """
     Grade a batch of subjective student answers against expected answers and rubrics using Gemini.
     """
+    if not client:
+        raise HTTPException(
+            status_code=500,
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY is configured in your environment variables."
+        )
     try:
         print(f"[INFO] Evaluating {len(request.submissions)} subjective submissions...")
         
