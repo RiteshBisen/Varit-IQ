@@ -269,7 +269,7 @@ export default function HomePage() {
             </h1>
             
             <p className="text-sm md:text-base text-muted leading-relaxed max-w-xl mx-auto font-medium">
-              Varit IQ reads your files (PDF, DOCX, TXT, or Images) and formulates academic multiple-choice quizzes, true/false modules, or detailed subjective Q&A critiques — autonomously powered by Gemini.
+              Varit IQ reads your files (PDF, DOCX, or TXT) and formulates academic multiple-choice quizzes, true/false modules, or detailed subjective Q&A critiques — autonomously powered by Gemini.
             </p>
           </div>
         </div>

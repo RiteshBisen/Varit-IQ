@@ -170,9 +170,10 @@ ALLOWED_MIME_TYPES = {
     "text/plain": "txt",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
     "application/msword": "doc",
-    "image/png": "png",
-    "image/jpeg": "jpg",
-    "image/webp": "webp",
+    # Image support disabled for Phase 1 (will be enabled in Phase 2)
+    # "image/png": "png",
+    # "image/jpeg": "jpg",
+    # "image/webp": "webp",
 }
 
 def extract_text_from_docx(file_bytes: bytes) -> str:
