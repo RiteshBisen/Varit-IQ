@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, DM_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import Script from "next/script";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -30,6 +31,9 @@ export const metadata: Metadata = {
     description: "Turn any document into an instant quiz with Google Gemini.",
     type: "website",
   },
+  other: {
+    "google-adsense-account": "ca-pub-6964672428983607",
+  },
 };
 
 export default function RootLayout({
@@ -40,41 +44,44 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const saved = localStorage.getItem('theme');
-                if (saved === 'light') {
-                  document.documentElement.classList.remove('dark');
-                } else {
-                  document.documentElement.classList.add('dark');
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
+        <Script id="theme-loader" strategy="beforeInteractive">
+          {`
+            try {
+              const saved = localStorage.getItem('theme');
+              if (saved === 'light') {
+                document.documentElement.classList.remove('dark');
+              } else {
+                document.documentElement.classList.add('dark');
+              }
+            } catch (e) {}
+          `}
+        </Script>
         {/* Google AdSense */}
-        <script
+        <meta name="google-adsense-account" content="ca-pub-6964672428983607" />
+        <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5907029144001184"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6964672428983607"
           crossOrigin="anonymous"
+          strategy="afterInteractive"
         />
         {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-W809Q34KRP" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'G-W809Q34KRP');
-            `,
-          }}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-W809Q34KRP"
+          strategy="afterInteractive"
         />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-W809Q34KRP');
+          `}
+        </Script>
         {/* JSON-LD Structured Data Schema for SEO */}
         <script
+          id="jsonld-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
