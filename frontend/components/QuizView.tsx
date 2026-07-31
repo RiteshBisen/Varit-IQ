@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { BookOpen, Clock, ChevronLeft, ChevronRight, GraduationCap } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { BookOpen, Clock, ChevronLeft, ChevronRight, GraduationCap, AlarmClock } from "lucide-react";
 import { Question, QuizResult, SingleSubjectiveEvaluation } from "@/types";
 import { evaluateSubjective } from "@/services/api";
 import { toast } from "sonner";
@@ -11,7 +11,8 @@ interface QuizViewProps {
   questions: Question[];
   documentName: string;
   startedAt: number;
-  assessmentType: "mcq" | "true_false" | "subjective";
+  assessmentType: "mcq" | "true_false" | "subjective" | "rapid_fire";
+  challengeTimerSeconds?: number;
   onComplete: (result: QuizResult, answers: Record<string, string | null>) => void;
 }
 
@@ -20,12 +21,29 @@ export default function QuizView({
   documentName,
   startedAt,
   assessmentType,
+  challengeTimerSeconds = 0,
   onComplete,
 }: QuizViewProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string | null>>({});
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isGrading, setIsGrading] = useState(false);
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(10);
+
+  const isRapidFire = assessmentType === "rapid_fire";
+  const hasChallengeTimer = challengeTimerSeconds > 0 && !isRapidFire;
+
+  // Session timer state
+  const [sessionTimeLeft, setSessionTimeLeft] = useState<number>(() => {
+    if (!hasChallengeTimer) return 0;
+    // Try to restore from sessionStorage on mount
+    if (typeof window !== "undefined") {
+      const saved = sessionStorage.getItem(`challenge_timer_${startedAt}`);
+      if (saved) return Math.max(0, Number(saved));
+    }
+    return challengeTimerSeconds;
+  });
+  const [showTimesUp, setShowTimesUp] = useState(false);
 
   // Live Timer tick
   useEffect(() => {
@@ -34,6 +52,43 @@ export default function QuizView({
     }, 1000);
     return () => clearInterval(interval);
   }, [startedAt]);
+
+  // Session-wide Challenge Timer
+  const submitRef = useRef<() => void>(() => { });
+  useEffect(() => {
+    submitRef.current = handleSubmitAssessment;
+  });
+
+  // Session-wide Challenge Timer
+  useEffect(() => {
+    if (!hasChallengeTimer || showTimesUp || isGrading) return;
+
+    const interval = setInterval(() => {
+      setSessionTimeLeft((prev) => {
+        const next = Math.max(0, prev - 1);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem(`challenge_timer_${startedAt}`, String(next));
+        }
+        if (next <= 0) {
+          clearInterval(interval);
+          setShowTimesUp(true);
+          // Clean up sessionStorage
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem(`challenge_timer_${startedAt}`);
+          }
+          // Auto-submit after brief Time's Up display
+          setTimeout(() => {
+            submitRef.current();
+          }, 3000);
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [hasChallengeTimer, showTimesUp, isGrading, startedAt]);
 
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
@@ -72,10 +127,10 @@ export default function QuizView({
   };
 
   // Submit assessment (grading)
-  const handleSubmitAssessment = async () => {
+  const handleSubmitAssessment = useCallback(async () => {
     const unansweredCount = questions.filter((q) => !answers[q.id]?.trim()).length;
 
-    if (unansweredCount > 0) {
+    if (unansweredCount > 0 && !isRapidFire) {
       toast.warning("Incomplete Assessment", {
         description: `You have ${unansweredCount} unanswered questions. We recommend writing answers for all questions before submitting.`,
       });
@@ -148,7 +203,70 @@ export default function QuizView({
         answers
       );
     }
-  };
+  }, [questions, answers, isRapidFire, startedAt, isSubjective, totalQuestions, onComplete]);
+
+  const handleTimeExpired = useCallback(() => {
+    // Navigate to next question or submit assessment when time runs out
+    if (currentIndex + 1 < questions.length) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      handleSubmitAssessment();
+    }
+  }, [currentIndex, questions.length, handleSubmitAssessment]);
+
+  // Keep a ref so the interval always calls the latest version
+  const timeExpiredRef = useRef(handleTimeExpired);
+  useEffect(() => {
+    timeExpiredRef.current = handleTimeExpired;
+  }, [handleTimeExpired]);
+
+  // Per-question timer for Rapid Fire mode
+  useEffect(() => {
+    if (!isRapidFire || isGrading) {
+      setQuestionTimeLeft(0);
+      return;
+    }
+
+    // Reset timer to 10 seconds for this question
+    setQuestionTimeLeft(10);
+
+    // Visual countdown only — pure state update, no side effects
+    const interval = setInterval(() => {
+      setQuestionTimeLeft((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    // Auto-advance fires exactly once after 10 seconds
+    const timeout = setTimeout(() => {
+      timeExpiredRef.current();
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [currentIndex, isRapidFire, isGrading]);
+
+  // Time's Up modal — shown briefly before auto-submit
+  if (showTimesUp) {
+    return (
+      <div className="w-full max-w-xl mx-auto flex flex-col items-center gap-6 sm:gap-8 py-10 px-4 sm:py-16 sm:px-6 border-2 border-brutal-red bg-card rounded-3xl shadow-xl">
+        <div className="w-20 h-20 bg-brutal-red/10 rounded-full flex items-center justify-center text-brutal-red animate-bounce">
+          <AlarmClock className="w-10 h-10 stroke-[2.5]" />
+        </div>
+        <div className="text-center space-y-3 px-4 sm:px-6">
+          <h2 className="font-display font-black text-3xl sm:text-4xl uppercase tracking-tight text-brutal-red">
+            Time&apos;s Up!
+          </h2>
+          <p className="text-sm text-muted font-bold">
+            Your assessment has been auto-submitted. Preparing your results...
+          </p>
+        </div>
+        <div className="w-4/5 h-2 bg-brutal-red/20 rounded-full overflow-hidden shadow-inner">
+          <div className="h-full bg-brutal-red rounded-full animate-pulse" style={{ width: "100%" }} />
+        </div>
+      </div>
+    );
+  }
 
   if (isGrading) {
     return (
@@ -190,15 +308,34 @@ export default function QuizView({
         </div>
 
         {/* Live Timer Box */}
-        <div className="flex items-center gap-2.5 px-4 py-2 border border-border bg-card text-foreground font-mono-custom font-bold rounded-full shadow-xs w-fit self-end sm:self-auto">
-          <Clock className="w-4.5 h-4.5 text-brutal-red stroke-[2.5]" />
-          <span>ELAPSED: {formatClock(elapsedSeconds)}</span>
+        <div className="flex flex-wrap gap-2.5 self-end sm:self-auto">
+          {isRapidFire && (
+            <div className="flex items-center gap-2 px-4 py-2 border-2 border-brutal-red bg-brutal-red/10 text-brutal-red font-mono-custom font-black rounded-full shadow-xs">
+              <span className="w-2 h-2 bg-brutal-red rounded-full animate-pulse" />
+              <span>TIME LEFT: {questionTimeLeft}s</span>
+            </div>
+          )}
+          {hasChallengeTimer && (
+            <div className={`flex items-center gap-2 px-4 py-2 border-2 font-mono-custom font-black rounded-full shadow-xs transition-colors duration-300 ${sessionTimeLeft <= 60
+                ? "border-brutal-red bg-brutal-red/10 text-brutal-red animate-pulse"
+                : sessionTimeLeft <= 180
+                  ? "border-brutal-yellow bg-brutal-yellow/10 text-brutal-yellow"
+                  : "border-brutal-blue bg-brutal-blue/10 text-brutal-blue"
+              }`}>
+              <AlarmClock className="w-4 h-4 stroke-[2.5]" />
+              <span>SESSION: {formatClock(sessionTimeLeft)}</span>
+            </div>
+          )}
+          <div className="flex items-center gap-2.5 px-4 py-2 border border-border bg-card text-foreground font-mono-custom font-bold rounded-full shadow-xs w-fit">
+            <Clock className="w-4.5 h-4.5 text-brutal-red stroke-[2.5]" />
+            <span>ELAPSED: {formatClock(elapsedSeconds)}</span>
+          </div>
         </div>
       </div>
 
       {/* Grid Layout: Sidebar Navigation & Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
+
         {/* Main Content Area */}
         <div className="lg:col-span-8 space-y-6">
           {isSubjective ? (
@@ -261,7 +398,7 @@ export default function QuizView({
           <div className="flex items-center justify-between gap-4 pt-4">
             <button
               onClick={handlePrev}
-              disabled={currentIndex === 0}
+              disabled={currentIndex === 0 || isRapidFire}
               className="flex-1 flex items-center justify-center gap-2 py-3.5 border border-border bg-card text-foreground font-display font-bold text-sm uppercase rounded-full shadow-sm hover:bg-accent-light transition-all duration-200 disabled:opacity-40 disabled:hover:bg-card disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
@@ -294,19 +431,25 @@ export default function QuizView({
             {questions.map((q, idx) => {
               const isActive = idx === currentIndex;
               const hasAnswer = (answers[q.id] || "").trim().length > 0;
+              // In rapid fire, only allow navigating to the current question
+              const isLocked = isRapidFire && idx !== currentIndex;
 
               return (
                 <button
                   key={q.id}
-                  onClick={() => setCurrentIndex(idx)}
+                  onClick={() => !isLocked && setCurrentIndex(idx)}
+                  disabled={isLocked}
                   className={`
-                    h-10 border font-mono-custom font-black text-sm flex items-center justify-center cursor-pointer transition-all duration-200 rounded-xl
-                    ${
-                      isActive
-                        ? "bg-brutal-blue text-white border-brutal-blue shadow-md"
+                    h-10 border font-mono-custom font-black text-sm flex items-center justify-center transition-all duration-200 rounded-xl
+                    ${isActive
+                      ? "bg-brutal-blue text-white border-brutal-blue shadow-md cursor-pointer"
+                      : isLocked
+                        ? hasAnswer
+                          ? "bg-brutal-blue/10 text-brutal-blue/40 border-transparent opacity-60 cursor-not-allowed"
+                          : "bg-background text-muted/40 border-border opacity-50 cursor-not-allowed"
                         : hasAnswer
-                          ? "bg-brutal-blue/10 text-brutal-blue border-transparent"
-                          : "bg-background text-muted border-border hover:bg-accent-light"
+                          ? "bg-brutal-blue/10 text-brutal-blue border-transparent cursor-pointer"
+                          : "bg-background text-muted border-border hover:bg-accent-light cursor-pointer"
                     }
                   `}
                 >

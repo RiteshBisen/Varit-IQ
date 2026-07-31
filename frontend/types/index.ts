@@ -1,6 +1,8 @@
 // ─── Core Data Contract ──────────────────────────────────────────────────────
 
-export type AssessmentType = "mcq" | "true_false" | "subjective";
+export type AssessmentType = "mcq" | "true_false" | "subjective" | "rapid_fire";
+
+export type ChallengeTimerOption = "off" | 5 | 10 | 15 | 20 | "custom";
 
 export interface Question {
   id: string;

@@ -14,7 +14,7 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
-import { Question, QuizResult } from "@/types";
+import { Question, QuizResult, AssessmentType } from "@/types";
 import TutorChat from "./TutorChat";
 import { AnimatePresence } from "framer-motion";
 
@@ -23,7 +23,7 @@ interface ResultsViewProps {
   questions: Question[];
   answers: Record<string, string | null>;
   documentName: string;
-  assessmentType: "mcq" | "true_false" | "subjective";
+  assessmentType: AssessmentType;
   onRetry: () => void;
   onNewFile: () => void;
 }

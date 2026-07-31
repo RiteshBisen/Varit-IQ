@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Send, User, Mail, Tag, HelpCircle, FileText, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { Send, User, Mail, Tag, HelpCircle, FileText, CheckCircle2, AlertTriangle, Loader2, Instagram, Linkedin } from "lucide-react";
 import { sendContactMessage } from "@/services/api";
 import { ContactRequest } from "@/types";
 
@@ -177,7 +177,7 @@ export default function ContactForm() {
                   Thanks for reaching out!
                 </h4>
                 <p className="text-xs sm:text-sm text-muted leading-relaxed">
-                  We've received your message and will get back to you as soon as possible.
+                  We&apos;ve received your message and will get back to you as soon as possible.
                 </p>
               </div>
 
@@ -358,6 +358,49 @@ export default function ContactForm() {
                   </>
                 )}
               </button>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center my-6">
+              <div className="flex-grow border-t border-border/40"></div>
+              <span className="mx-4 text-[10px] font-bold tracking-widest text-muted uppercase">
+                OR CONNECT VIA
+              </span>
+              <div className="flex-grow border-t border-border/40"></div>
+            </div>
+
+            {/* Social Links Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Mail */}
+              <a
+                href="mailto:supportvaritiq@gmail.com"
+                className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-full border border-border bg-accent-light/20 text-foreground hover:bg-brutal-blue/5 hover:border-brutal-blue/40 hover:text-brutal-blue active:scale-98 transition-all duration-200 text-xs font-semibold cursor-pointer group"
+              >
+                <Mail className="w-4 h-4 text-muted group-hover:text-brutal-blue transition-colors duration-200" />
+                <span>Email Support</span>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/varit.iq/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-full border border-border bg-accent-light/20 text-foreground hover:bg-brutal-red/5 hover:border-brutal-red/40 hover:text-brutal-red active:scale-98 transition-all duration-200 text-xs font-semibold cursor-pointer group"
+              >
+                <Instagram className="w-4 h-4 text-muted group-hover:text-brutal-red transition-colors duration-200" />
+                <span>Instagram</span>
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/company/varit-iq/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-full border border-border bg-accent-light/20 text-foreground hover:bg-brutal-blue/5 hover:border-brutal-blue/40 hover:text-brutal-blue active:scale-98 transition-all duration-200 text-xs font-semibold cursor-pointer group"
+              >
+                <Linkedin className="w-4 h-4 text-muted group-hover:text-[#0A66C2] transition-colors duration-200" />
+                <span>LinkedIn</span>
+              </a>
             </div>
           </motion.form>
         )}

@@ -68,6 +68,113 @@ else:
 
 MODEL_ID = os.getenv("GEMINI_MODEL_ID", "gemini-flash-latest")
 
+# ==============================================================================
+# ─── Phase 2: Gemini Client Rotation & Fallback ───
+# ==============================================================================
+
+class GeminiManager:
+    def __init__(self):
+        # Support comma-separated API keys, falling back to single key
+        api_keys_str = os.getenv("GOOGLE_API_KEYS", "")
+        self.api_keys = [k.strip() for k in api_keys_str.split(",") if k.strip()]
+        
+        single_key = os.getenv("GOOGLE_API_KEY")
+        if not self.api_keys and single_key:
+            self.api_keys = [single_key]
+            
+        self.clients = []
+        for key in self.api_keys:
+            try:
+                self.clients.append(genai.Client(api_key=key))
+            except Exception as e:
+                import warnings
+                warnings.warn(f"Failed to initialize Gemini client for a key: {e}")
+                
+        self.current_client_index = 0
+        
+        # Primary model configuration
+        self.primary_model = os.getenv("GEMINI_MODEL_ID", "gemini-flash-latest")
+        
+        # Fallback models configuration
+        fallback_str = os.getenv("GEMINI_FALLBACK_MODEL_IDS", "gemini-2.5-flash-lite,gemini-2.0-flash,gemini-2.0-flash-lite")
+        self.fallback_models = [m.strip() for m in fallback_str.split(",") if m.strip()]
+        
+        if not self.clients:
+            import warnings
+            warnings.warn("No valid Gemini API keys found. Gemini AI functionality will be disabled.")
+            
+    def get_client_and_models(self):
+        if not self.clients:
+            return []
+            
+        attempts = []
+        n_clients = len(self.clients)
+        
+        # 1. Try primary model on all clients, starting from current index
+        for i in range(n_clients):
+            idx = (self.current_client_index + i) % n_clients
+            attempts.append((self.clients[idx], self.primary_model, idx))
+            
+        # 2. Try each fallback model on all clients, starting from current index
+        for fallback_model in self.fallback_models:
+            for i in range(n_clients):
+                idx = (self.current_client_index + i) % n_clients
+                attempts.append((self.clients[idx], fallback_model, idx))
+                
+        return attempts
+
+    def advance_rotation(self, successful_idx=None):
+        if self.clients:
+            if successful_idx is not None:
+                self.current_client_index = (successful_idx + 1) % len(self.clients)
+            else:
+                self.current_client_index = (self.current_client_index + 1) % len(self.clients)
+
+gemini_manager = GeminiManager()
+
+async def call_gemini_with_retry(api_call_func):
+    attempts = gemini_manager.get_client_and_models()
+    if not attempts:
+        raise HTTPException(
+            status_code=500,
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY or GOOGLE_API_KEYS is configured in your environment variables."
+        )
+        
+    last_error = None
+    for client, model_id, client_idx in attempts:
+        try:
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(None, lambda: api_call_func(client, model_id))
+            gemini_manager.advance_rotation(client_idx)
+            return response
+        except Exception as e:
+            last_error = e
+            err_msg = str(e).lower()
+            
+            is_rate_limit = "429" in err_msg or "resource_exhausted" in err_msg or "quota" in err_msg or "rate limit" in err_msg
+            is_model_not_found = "not found" in err_msg or "404" in err_msg or "not supported" in err_msg
+            is_transient_error = "500" in err_msg or "503" in err_msg or "internal" in err_msg or "service unavailable" in err_msg
+            
+            if is_rate_limit:
+                print(f"[WARNING] Rate limit hit with API key #{client_idx} using model {model_id}. Retrying next available key/model...")
+                continue
+            elif is_model_not_found:
+                print(f"[WARNING] Model {model_id} is not supported or not found. Retrying with fallback model/key...")
+                continue
+            elif is_transient_error:
+                print(f"[WARNING] Transient Gemini API error ({e}). Retrying...")
+                continue
+            else:
+                raise e
+                
+    raise HTTPException(
+        status_code=429,
+        detail=f"Gemini API rate limit exceeded or service unavailable. All retry paths failed. Last error: {last_error}"
+    )
+
+
+
+
 def get_system_instruction(difficulty: str, question_count: int, assessment_type: str) -> str:
     link_prohibition = (
         " You MUST NOT include any hyperlinks, URLs, or web links (e.g., http://, https://, www.) in any of the questions, "
@@ -170,10 +277,10 @@ ALLOWED_MIME_TYPES = {
     "text/plain": "txt",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
     "application/msword": "doc",
-    # Image support disabled for Phase 1 (will be enabled in Phase 2)
-    # "image/png": "png",
-    # "image/jpeg": "jpg",
-    # "image/webp": "webp",
+    # Image support enabled
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
 }
 
 def extract_text_from_docx(file_bytes: bytes) -> str:
@@ -242,10 +349,10 @@ async def health():
 
 @app.post("/api/tutor", response_model=TutorResponse, tags=["Quiz"])
 async def chat_with_tutor(request: TutorRequest):
-    if not client:
+    if not gemini_manager.clients:
         raise HTTPException(
             status_code=500,
-            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY is configured in your environment variables."
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY or GOOGLE_API_KEYS is configured in your environment variables."
         )
     try:
         system_instruction = (
@@ -272,15 +379,17 @@ async def chat_with_tutor(request: TutorRequest):
             
         print(f"[INFO] Chatting with tutor. History length: {len(request.messages)}")
 
-        response = client.models.generate_content(
-            model=MODEL_ID,
-            contents=contents,
-            config=types.GenerateContentConfig(
-                systemInstruction=system_instruction,
-                temperature=0.7,
-                maxOutputTokens=4096,
-            ),
-        )
+        def api_call(client_instance, model_id):
+            return client_instance.models.generate_content(
+                model=model_id,
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    systemInstruction=system_instruction,
+                    temperature=0.7,
+                    maxOutputTokens=4096,
+                ),
+            )
+        response = await call_gemini_with_retry(api_call)
         
         reply = response.text
         if not reply:
@@ -302,10 +411,10 @@ async def generate_mcqs(
     """
     Accept a PDF, TXT, or DOCX document upload and return AI-generated questions matching the assessment format.
     """
-    if not client:
+    if not gemini_manager.clients:
         raise HTTPException(
             status_code=500,
-            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY is configured in your environment variables."
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY or GOOGLE_API_KEYS is configured in your environment variables."
         )
 
     # ── Validate MIME type ──────────────────────────────────────────────────
@@ -369,19 +478,21 @@ async def generate_mcqs(
             ]
 
         # ── Generate Questions via Gemini ─────────────────────────────────────
-        print(f"[INFO] Generating '{assessment_type}' questions with model: {MODEL_ID}...")
+        print(f"[INFO] Generating '{assessment_type}' questions with client rotation and fallback...")
 
-        response = client.models.generate_content(
-            model=MODEL_ID,
-            contents=contents,
-            config=types.GenerateContentConfig(
-                systemInstruction=get_system_instruction(difficulty, question_count, assessment_type),
-                responseMimeType="application/json",
-                responseSchema=list[Question],
-                temperature=0.4,
-                maxOutputTokens=8192,
-            ),
-        )
+        def api_call(client_instance, model_id):
+            return client_instance.models.generate_content(
+                model=model_id,
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    systemInstruction=get_system_instruction(difficulty, question_count, assessment_type),
+                    responseMimeType="application/json",
+                    responseSchema=list[Question],
+                    temperature=0.4,
+                    maxOutputTokens=8192,
+                ),
+            )
+        response = await call_gemini_with_retry(api_call)
 
         # ── Parse response ───────────────────────────────────────────────────
         raw_text = response.text
@@ -443,13 +554,13 @@ async def evaluate_subjective_answers(request: SubjectiveEvaluationRequest):
     """
     Grade a batch of subjective student answers against expected answers and rubrics using Gemini.
     """
-    if not client:
+    if not gemini_manager.clients:
         raise HTTPException(
             status_code=500,
-            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY is configured in your environment variables."
+            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY or GOOGLE_API_KEYS is configured in your environment variables."
         )
     try:
-        print(f"[INFO] Evaluating {len(request.submissions)} subjective submissions...")
+        print(f"[INFO] Evaluating {len(request.submissions)} subjective submissions with client rotation and fallback...")
         
         system_instruction = (
             "You are an expert academic evaluator. You will be given a list of questions, their expected answers, rubrics, and the student's submitted answers. "
@@ -475,17 +586,19 @@ async def evaluate_subjective_answers(request: SubjectiveEvaluationRequest):
         
         prompt_text = "\n".join(prompt_parts) + "\n\nEvaluate all submissions and return as a JSON object matching SubjectiveEvaluationResponse."
         
-        response = client.models.generate_content(
-            model=MODEL_ID,
-            contents=prompt_text,
-            config=types.GenerateContentConfig(
-                systemInstruction=system_instruction,
-                responseMimeType="application/json",
-                responseSchema=SubjectiveEvaluationResponse,
-                temperature=0.2,
-                maxOutputTokens=8192,
-            ),
-        )
+        def api_call(client_instance, model_id):
+            return client_instance.models.generate_content(
+                model=model_id,
+                contents=prompt_text,
+                config=types.GenerateContentConfig(
+                    systemInstruction=system_instruction,
+                    responseMimeType="application/json",
+                    responseSchema=SubjectiveEvaluationResponse,
+                    temperature=0.2,
+                    maxOutputTokens=8192,
+                ),
+            )
+        response = await call_gemini_with_retry(api_call)
         
         raw_text = response.text
         if not raw_text:
