@@ -29,7 +29,7 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
 
       {/* Grid Layout */}
       <div className="space-y-10">
-        
+
         {/* Panel 1: Platform Purpose */}
         <div className="space-y-6">
           <div className="flex items-center gap-3">
@@ -119,7 +119,7 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
               </div>
               <div className="flex items-center gap-2">
                 <a
-                  href="https://www.instagram.com/"
+                  href="https://www.instagram.com/mr_vatsalya_09/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-full border border-border bg-accent-light/35 text-foreground hover:bg-brutal-red/10 hover:border-brutal-red/40 hover:text-brutal-red active:scale-95 transition-all text-xs font-semibold"
@@ -128,7 +128,7 @@ export default function AboutDevelopers({ onClose }: AboutDevelopersProps) {
                   <span>Instagram</span>
                 </a>
                 <a
-                  href="https://www.linkedin.com/"
+                  href="https://www.linkedin.com/in/vatsalya-verma-b45200241/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-full border border-border bg-accent-light/35 text-foreground hover:bg-brutal-blue/10 hover:border-brutal-blue/40 hover:text-brutal-blue active:scale-95 transition-all text-xs font-semibold"
