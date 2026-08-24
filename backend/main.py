@@ -92,6 +92,9 @@ class GeminiManager:
                 
         self.current_client_index = 0
         
+        # Track bad keys (permanent auth errors) and temporary rate-limited keys
+        self.client_status = {i: {"disabled": False, "rate_limited_until": 0} for i in range(len(self.clients))}
+        
         # Primary model configuration
         self.primary_model = os.getenv("GEMINI_MODEL_ID", "gemini-flash-latest")
         
@@ -103,22 +106,49 @@ class GeminiManager:
             import warnings
             warnings.warn("No valid Gemini API keys found. Gemini AI functionality will be disabled.")
             
+    def mark_disabled(self, client_idx):
+        if client_idx in self.client_status:
+            self.client_status[client_idx]["disabled"] = True
+            print(f"[ERROR] API Key #{client_idx} has been permanently disabled in this session due to invalid credentials or permissions.")
+
+    def mark_rate_limited(self, client_idx, duration=60):
+        if client_idx in self.client_status:
+            self.client_status[client_idx]["rate_limited_until"] = time.time() + duration
+            print(f"[WARNING] API Key #{client_idx} rate-limited. Suspending for {duration} seconds.")
+
     def get_client_and_models(self):
         if not self.clients:
             return []
             
         attempts = []
         n_clients = len(self.clients)
+        current_time = time.time()
         
-        # 1. Try primary model on all clients, starting from current index
+        # Filter out permanently disabled clients
+        active_indices = [i for i in range(n_clients) if not self.client_status[i]["disabled"]]
+        if not active_indices:
+            return []
+            
+        # Order the active indices starting from current_client_index
+        ordered_indices = []
         for i in range(n_clients):
             idx = (self.current_client_index + i) % n_clients
+            if idx in active_indices:
+                ordered_indices.append(idx)
+                
+        # Prioritize healthy (non-rate-limited) keys first, fallback to rate-limited ones as last resort
+        healthy_indices = [idx for idx in ordered_indices if self.client_status[idx]["rate_limited_until"] <= current_time]
+        backoff_indices = [idx for idx in ordered_indices if self.client_status[idx]["rate_limited_until"] > current_time]
+        
+        final_indices_rotation = healthy_indices + backoff_indices
+        
+        # 1. Try primary model on all final indices
+        for idx in final_indices_rotation:
             attempts.append((self.clients[idx], self.primary_model, idx))
             
-        # 2. Try each fallback model on all clients, starting from current index
+        # 2. Try each fallback model on all final indices
         for fallback_model in self.fallback_models:
-            for i in range(n_clients):
-                idx = (self.current_client_index + i) % n_clients
+            for idx in final_indices_rotation:
                 attempts.append((self.clients[idx], fallback_model, idx))
                 
         return attempts
@@ -137,7 +167,7 @@ async def call_gemini_with_retry(api_call_func):
     if not attempts:
         raise HTTPException(
             status_code=500,
-            detail="Gemini API client is not initialized. Please verify that GOOGLE_API_KEY or GOOGLE_API_KEYS is configured in your environment variables."
+            detail="Gemini API client is not initialized or all configured API keys are disabled. Please check your environment variables."
         )
         
     last_error = None
@@ -157,7 +187,7 @@ async def call_gemini_with_retry(api_call_func):
             is_key_error = any(term in err_msg for term in ["api_key_invalid", "invalid api key", "unauthorized", "api key", "400", "403", "credential", "permission"])
             
             if is_rate_limit:
-                print(f"[WARNING] Rate limit hit with API key #{client_idx} using model {model_id}. Retrying next available key/model...")
+                gemini_manager.mark_rate_limited(client_idx, duration=60)
                 continue
             elif is_model_not_found:
                 print(f"[WARNING] Model {model_id} is not supported or not found. Retrying with fallback model/key...")
@@ -166,7 +196,7 @@ async def call_gemini_with_retry(api_call_func):
                 print(f"[WARNING] Transient Gemini API error ({e}). Retrying...")
                 continue
             elif is_key_error:
-                print(f"[WARNING] API Key #{client_idx} authentication or permission issue ({e}). Retrying next available key...")
+                gemini_manager.mark_disabled(client_idx)
                 continue
             else:
                 raise e
