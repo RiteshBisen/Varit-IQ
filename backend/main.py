@@ -154,6 +154,7 @@ async def call_gemini_with_retry(api_call_func):
             is_rate_limit = "429" in err_msg or "resource_exhausted" in err_msg or "quota" in err_msg or "rate limit" in err_msg
             is_model_not_found = "not found" in err_msg or "404" in err_msg or "not supported" in err_msg
             is_transient_error = "500" in err_msg or "503" in err_msg or "internal" in err_msg or "service unavailable" in err_msg
+            is_key_error = any(term in err_msg for term in ["api_key_invalid", "invalid api key", "unauthorized", "api key", "400", "403", "credential", "permission"])
             
             if is_rate_limit:
                 print(f"[WARNING] Rate limit hit with API key #{client_idx} using model {model_id}. Retrying next available key/model...")
@@ -163,6 +164,9 @@ async def call_gemini_with_retry(api_call_func):
                 continue
             elif is_transient_error:
                 print(f"[WARNING] Transient Gemini API error ({e}). Retrying...")
+                continue
+            elif is_key_error:
+                print(f"[WARNING] API Key #{client_idx} authentication or permission issue ({e}). Retrying next available key...")
                 continue
             else:
                 raise e
