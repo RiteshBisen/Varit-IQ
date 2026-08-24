@@ -99,7 +99,7 @@ class GeminiManager:
         self.primary_model = os.getenv("GEMINI_MODEL_ID", "gemini-flash-latest")
         
         # Fallback models configuration
-        fallback_str = os.getenv("GEMINI_FALLBACK_MODEL_IDS", "gemini-2.5-flash-lite,gemini-2.0-flash,gemini-2.0-flash-lite")
+        fallback_str = os.getenv("GEMINI_FALLBACK_MODEL_IDS", "gemini-2.5-flash-lite,gemini-1.5-flash,gemini-1.5-flash-8b")
         self.fallback_models = [m.strip() for m in fallback_str.split(",") if m.strip()]
         
         if not self.clients:
