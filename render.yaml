@@ -8,6 +8,8 @@ services:
     envVars:
       - key: GOOGLE_API_KEY
         sync: false # You will enter your Gemini API key in the Render dashboard
+      - key: GOOGLE_API_KEYS
+        sync: false # Comma-separated fallback/rotation Gemini API keys
       - key: FRONTEND_URL
         value: https://www.varitiq.in
       - key: SMTP_HOST
