@@ -20,7 +20,7 @@ Upload Any Study Material ──► Choose Assessment Format ──► AI Evalua
 
 <br />
 
-[Explore Live Platform](https://varitiq.in) • [Watch Demo Video](#-live-product-and-important-links) • [View Architecture](#-system-architecture) • [Key Features](#-key-features) • [Contact Support](#-contact-and-support)
+[Explore Live Platform](https://varitiq.in) • [Watch Demo Video](#-live-product-and-important-links) • [View Architecture](#-system-architecture) • [Key Features](#-key-features) • [Platform Showcase](#-platform-screenshots--visual-showcase) • [Contact Support](#-contact-and-support)
 
 ---
 
@@ -48,7 +48,7 @@ Traditional assessment generation is labor-intensive for educators and often lea
 
 ## 💡 The Problem Statement
 
-In modern higher education, test preparation, and self-directed learning, students and educators encounter three fundamental roadblocks:
+In modern higher education, test preparation, and self-directed learning, students and educators encounter four fundamental roadblocks:
 
 1. **The Assessment Authoring Bottleneck:**
    Educators and teaching assistants spend dozens of manual hours drafting quizzes, balancing difficulty levels, formatting distractors, and writing explanatory rationales for every topic.
@@ -140,42 +140,77 @@ Varit IQ replaces passive reading and manual question authoring with an autonomo
 
 ## 🖼️ Platform Screenshots & Visual Showcase
 
-> High-resolution captures from the live Varit IQ deployment illustrate the complete user journey from ingestion to analytics.
+> High-resolution product captures illustrating the complete Varit IQ end-to-end user workflow: from document ingestion and real-time processing to interactive assessment, AI tutoring, and performance analytics.
 
 <br />
 
-### 1. Assessment Builder & Drag-and-Drop Ingestion
-*Configure assessment format (MCQ, True/False, Subjective Q&A, Rapid Fire), set difficulty level, select question quantity, configure challenge timers, and drag & drop study files.*
+### 1. Homepage / Landing Page
+**Caption: Varit IQ – AI-Powered Learning and Assessment Platform**
 
-![Varit IQ Dashboard & Upload Interface](assets/home.png)
+![Varit IQ – AI-Powered Learning and Assessment Platform](assets/01-varitiq-homepage.png)
+<!-- Screenshot Asset: assets/01-varitiq-homepage.png -->
 
----
-
-### 2. Autonomous Document Processing Pipeline
-*A 3-stage animated feedback pipeline informs the user as documents are uploaded, processed natively through Gemini, and structured into typed question schemas.*
-
-![Varit IQ Document Processing View](assets/processing.png)
+The landing interface features a clean, Google Material-inspired aesthetic designed for cognitive clarity and distraction-free operation. Users are greeted with an intuitive **Assessment Builder** on the left where they can customize their assessment format (Multiple Choice, True/False, Subjective Q&A, or Rapid Fire), configure the difficulty range (`Easy`, `Medium`, `Hard`), and choose the exact question quantity (5 to 20 questions via a dynamic slider). On the right, a prominent drag-and-drop ingestion zone accepts study documents across multiple formats (PDF, TXT, DOCX, PNG) for immediate parsing.
 
 ---
 
-### 3. Interactive Quiz Assessment View
-*Minimalist, distraction-free assessment interface featuring animated card transitions, instant option feedback, timer tracking, and expandable academic rationales.*
+### 2. Uploaded Document Analysis
+**Caption: Smart Document Processing**
 
-![Varit IQ Interactive Quiz View](assets/quiz.png)
+![Smart Document Processing](assets/02-smart-document-processing.png)
+<!-- Screenshot Asset: assets/02-smart-document-processing.png -->
 
----
-
-### 4. Real-Time AI Academic Tutor Drawer
-*Context-aware AI tutor chat opens directly alongside incorrect answers, guiding learners through misconceptions using interactive dialogue.*
-
-![Varit IQ AI Academic Tutor Drawer](assets/tutor.png)
+Once a user uploads their study material, Varit IQ transitions into an automated, transparent document analysis view. The interface displays the active document name (e.g., `Ritesh_Bisen_Resume (11).pdf`) alongside critical operational guarantees: typical processing duration (15–30 seconds), a zero-permanent-storage data privacy pledge (in-memory processing with automatic buffer clearing), and end-to-end encrypted transfer via Google's secure APIs. A synchronized 3-step live processing indicator guides the user through material upload, Gemini indexing/topic extraction, and final question/rubric formulation.
 
 ---
 
-### 5. Performance Analytics & Export Suite
-*Comprehensive evaluation breakdown displaying circular score gauge, concept retention tier, time tracking, itemized rubric audits, and instant PDF/TXT export options.*
+### 3. Interactive Quiz Interface
+**Caption: Interactive Assessments with Instant Feedback**
 
-![Varit IQ Performance Analytics](assets/analytics.png)
+![Interactive Assessments with Instant Feedback](assets/03-interactive-quiz.png)
+<!-- Screenshot Asset: assets/03-interactive-quiz.png -->
+
+The quiz-taking interface delivers an active, high-engagement testing experience. As learners select options, Varit IQ provides instantaneous visual validation: incorrect choices are highlighted in prominent red with a cancellation badge, while the correct answer is illuminated in vibrant green with a verified checkmark. Immediately beneath the options, an **Explanation Critique** container displays the factual rationale directly extracted from the source material. A live countdown timer, elapsed timer, question progress bar, and interactive **Question Navigator** provide full navigation control and pacing awareness.
+
+---
+
+### 4. AI-Powered Learning Chatbot
+**Caption: AI Learning Assistant**
+
+![AI Learning Assistant](assets/04-ai-learning-assistant.png)
+<!-- Screenshot Asset: assets/04-ai-learning-assistant.png -->
+
+When a student struggles with a concept or answers incorrectly, the embedded **AI Learning Assistant** opens seamlessly as a context-aware side-drawer. Rather than merely revealing the answer, the assistant analyzes the exact question, the student's submission, and the target concept to engage in interactive Socratic dialogue. Learners can ask open-ended questions (e.g., *"Can you help me understand why my answer was incorrect?"*), receive customized step-by-step reasoning, debug conceptual misconceptions, and solidify topic mastery before proceeding.
+
+---
+
+### 5. Performance Analytics
+**Caption: Performance Analytics & Personalised Feedback**
+
+![Performance Analytics & Personalised Feedback](assets/05-performance-analytics.png)
+<!-- Screenshot Asset: assets/05-performance-analytics.png -->
+
+Upon assessment completion, learners receive a comprehensive performance evaluation report. The analytics suite highlights the student's overall assessment score via a circular visual gauge, paired with an objective performance classification (e.g., `Rating: Needs Review`, `Developing`, `Competent`, or `Mastery`). Key performance metrics—including total elapsed time, correct count, incorrect count, and accuracy percentage—are accompanied by an answer distribution chart and actionable **Academic Performance Suggestions** advising the learner on which conceptual areas require targeted remediation.
+
+---
+
+### 6. Developer Support Feature
+**Caption: Community & Developer Support**
+
+![Community & Developer Support](assets/06-developer-support.png)
+<!-- Screenshot Asset: assets/06-developer-support.png -->
+
+The Community & Developer Support interface provides an open bridge between users and the team behind Varit IQ. As demonstrated in the live modal, learners and educators can support ongoing platform development through voluntary micro-contributions (*"Buy a Chai"* at ₹20, ₹60, ₹100, or custom amounts via Razorpay) to help offset Gemini API usage costs and keep the platform free and accessible. The module also serves as a direct channel for users to provide feedback, report issues, and collaborate with the developers.
+
+---
+
+### 7. About Varit IQ / Our Team
+**Caption: About Varit IQ – Our Vision & Team**
+
+![About Varit IQ – Our Vision & Team](assets/07-about-team.png)
+<!-- Screenshot Asset: assets/07-about-team.png -->
+
+The About view communicates the foundational purpose, pedagogical vision, and leadership behind Varit IQ. It articulates the platform's core commitment to transforming passive reading into active, distraction-free mastery following modern Material Design principles. The section introduces the architects behind the product—Founder & Chief Technology Officer **Ritesh Bisen** and Co-Founder & Chief Operating Officer **Vatsalya Verma**—detailing their respective responsibilities in core architecture, Gemini AI integration, business strategy, and educational synergy.
 
 ---
 
@@ -187,7 +222,8 @@ Varit IQ simplifies assessment creation into a streamlined four-step workflow:
 flowchart TD
     A["1. Upload Study Material\n(PDF, DOCX, TXT, or Images)"] --> B["2. Configure Assessment Parameters\n(Format, Difficulty, Question Count, Timer)"]
     B --> C["3. Autonomous AI Ingestion & Generation\n(Gemini 2.0 Flash + Strict Schema Validation)"]
-    C --> D["4. Interactive Assessment Session\n(MCQ, True/False, Subjective Q&A, or Rapid Fire)"]
+    D["4. Interactive Assessment Session\n(MCQ, True/False, Subjective Q&A, or Rapid Fire)"]
+    C --> D
     D --> E{"Incorrect Answer or Concept Gap?"}
     E -- Yes --> F["5. AI Academic Tutor Chat\n(Socratic Remediation & Misconception Review)"]
     E -- No --> G["6. Submit Assessment"]
