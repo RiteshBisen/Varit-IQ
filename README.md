@@ -40,9 +40,9 @@ Traditional assessment generation is labor-intensive for educators and often lea
 | :--- | :--- |
 | 🌐 **Live Deployed Platform** | [https://varitiq.in](https://varitiq.in) |
 | 🎬 **Product Demo Video** | [INSERT GOOGLE DRIVE DEMO VIDEO LINK HERE] |
-| 📸 **Official Instagram** | [INSERT OFFICIAL VARIT IQ INSTAGRAM LINK HERE] |
+| 📸 **Official Instagram** | [varit.iq](https://www.instagram.com/varit.iq/) |
 | 💻 **GitHub Repository** | [https://github.com/RiteshBisen/Varit-IQ](https://github.com/RiteshBisen/Varit-IQ) |
-| ✉️ **Official Support Email** | [INSERT OFFICIAL VARIT IQ SUPPORT EMAIL HERE] |
+| ✉️ **Official Support Email** | [supportvaritiq@gmail.com](supportvaritiq@gmail.com) |
 
 ---
 
@@ -467,8 +467,8 @@ Varit IQ was conceived, architected, and built by passionate builders dedicated 
 We welcome feedback, inquiries, bug reports, and partnership discussions:
 
 - **Official Website:** [https://varitiq.in](https://varitiq.in)
-- **Support Email:** [INSERT OFFICIAL VARIT IQ SUPPORT EMAIL HERE]
-- **Instagram:** [INSERT OFFICIAL VARIT IQ INSTAGRAM LINK HERE]
+- **Support Email:** [supportvaritiq@gmail.com](supportvaritiq@gmail.com)
+- **Instagram:** [varit.iq](https://www.instagram.com/varit.iq/)
 - **Issue Tracker:** [GitHub Issues](https://github.com/RiteshBisen/Varit-IQ/issues)
 
 ---
